@@ -1,4 +1,4 @@
-module project/recipe-recommender-system
+module recipe-recommender-backend
 
 go 1.17
 
