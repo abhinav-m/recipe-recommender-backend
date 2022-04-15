@@ -1,11 +1,16 @@
 package data
 
 import (
-	"encoding/csv"
+	"encoding/json"
+	"io/ioutil"
 	"log"
 	"os"
 	"strings"
 )
+
+type mapType map[string]interface{}
+
+
 
 type Recipe struct {
 	ID string `json:"id"`
@@ -13,6 +18,12 @@ type Recipe struct {
 	Category string `json:"category"`
 	Ingredients []string `json:"ingredients"`
 	Calories string `json:"calories"`
+	CookTime string `json:"time_in_mins"`
+	Rating float32 `json:"rating"`
+	SourScore int8 `json:"sour_score"`
+	SaltScore int8 `json:"salt_score"`
+	SweetScore int8 `json:"sweet_score"`
+	BitterScore int8 `json:"bitter_score"`
 }
 
 func formatAndSplit(s string) []string{
@@ -22,52 +33,34 @@ func formatAndSplit(s string) []string{
 	return strings.Split(s,",")
 }
 
-func createRecipeList(data [][]string) []Recipe {
-	var recipeList []Recipe
-	for i, line := range data {
-		// Omit header details for csv files
-		if i  > 0 {
-			var record Recipe
-			for j, field := range line {
-				switch j {
-				case 4:
-					record.ID = field
-				case 6:
-					record.Title = field
-				case 1:
-					record.Category = field
-				case 2:
-					record.Ingredients = formatAndSplit(field)
-				case 0:
-					record.Calories = field
-				}
-			}
-			if record.Title != "Recipe webpage is unconventional" {
-				recipeList = append(recipeList,record)
-			}
-		
-		}
+func createRecipeList(data []byte) []Recipe {
+	var parsedJson mapType
+	
+
+	if err := json.Unmarshal(data,&parsedJson);err !=nil{
+		log.Fatal(err)
 	}
 
-	return recipeList
+
 }
 
-func CsvReaderClosure(csvPath string) func() []Recipe {
-	f, err := os.Open(csvPath)
+func jsonReaderClosure(jsonPath string) func() []Recipe {
+	f, err := os.Open(jsonPath)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	defer f.Close()
 
-	csvReader := csv.NewReader(f)
-	data, err := csvReader.ReadAll()
+	byteValue, _ := ioutil.ReadAll(f)
 
 	if err != nil {
 		log.Fatal(err)
 	}
+	
+	
 
-	recipeData := createRecipeList(data)
+	recipeData := createRecipeList(byteValue)
 
 
 	return func() []Recipe {
