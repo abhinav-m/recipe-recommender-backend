@@ -18,6 +18,7 @@ type Recipe struct {
 func formatAndSplit(s string) []string{
 	s = strings.TrimSuffix(s,"]")
 	s = strings.TrimPrefix(s,"[")
+	s = strings.ReplaceAll(s,"'","")
 	return strings.Split(s,",")
 }
 
@@ -29,15 +30,15 @@ func createRecipeList(data [][]string) []Recipe {
 			var record Recipe
 			for j, field := range line {
 				switch j {
-				case 0:
+				case 4:
 					record.ID = field
-				case 2:
+				case 6:
 					record.Title = field
-				case 3:
+				case 1:
 					record.Category = field
-				case 5:
+				case 2:
 					record.Ingredients = formatAndSplit(field)
-				case 7:
+				case 0:
 					record.Calories = field
 				}
 			}

@@ -5,7 +5,6 @@ import (
 	"recipe-recommender-backend/data"
 
 	"github.com/gin-gonic/gin"
-	"github.com/nlpodyssey/gopickle/pickle"
 )
 
 /*
@@ -50,19 +49,19 @@ func CORSMiddleware() gin.HandlerFunc {
     }
 }
 
-func predictRecipe(c *gin.Context){
+// func predictRecipe(c *gin.Context){
 	
-	predictor,err := pickle.Load("/Users/abhinav-m/Work/recipe-recommender-backend/data/knn_compounds_pickle")
-	var to_predict [1][3]int
+// 	predictor,err := pickle.Load("/Users/abhinav-m/Work/recipe-recommender-backend/data/knn_compounds_pickle")
+// 	var to_predict [1][3]int
 
-	to_predict[0][0] = 20
-	to_predict[0][1] = 19
-	to_predict[0][2] = 34
+// 	to_predict[0][0] = 20
+// 	to_predict[0][1] = 19
+// 	to_predict[0][2] = 34
 
-	distances, indices := predictor.kneighbors(to_predict, 6)
+// 	distances, indices := predictor.kneighbors(to_predict, 6)
 	
-	c.IndentedJSON(http.StatusOK,distances)
-}
+// 	c.IndentedJSON(http.StatusOK,distances)
+// }
 
 
 func main() {
@@ -72,6 +71,6 @@ func main() {
 	 
 	router.GET("/recipes",getAllRecipes)
 	router.GET("/recipe/:id",getRecipe)
-	router.GET("/predict-recipe/:id",predictRecipe)
+	// router.GET("/predict-recipe/:id",predictRecipe)
 	router.Run("localhost:8080")
 }
