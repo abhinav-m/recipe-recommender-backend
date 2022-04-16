@@ -5,35 +5,26 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"strings"
 )
+
+// type Recipe struct {
+// 	ID string `json:"id"`
+// 	Title string `json:"title"`
+// 	Category string `json:"category"`
+// 	Ingredients []string `json:"ingredients"`
+// 	Calories string `json:"calories"`
+// 	CookTime string `json:"time_in_mins"`
+// 	Rating float32 `json:"rating"`
+// 	SourScore int8 `json:"sour_score"`
+// 	SaltScore int8 `json:"salt_score"`
+// 	SweetScore int8 `json:"sweet_score"`
+// 	BitterScore int8 `json:"bitter_score"`
+// }
+
 
 type mapType map[string]interface{}
 
-
-
-type Recipe struct {
-	ID string `json:"id"`
-	Title string `json:"title"`
-	Category string `json:"category"`
-	Ingredients []string `json:"ingredients"`
-	Calories string `json:"calories"`
-	CookTime string `json:"time_in_mins"`
-	Rating float32 `json:"rating"`
-	SourScore int8 `json:"sour_score"`
-	SaltScore int8 `json:"salt_score"`
-	SweetScore int8 `json:"sweet_score"`
-	BitterScore int8 `json:"bitter_score"`
-}
-
-func formatAndSplit(s string) []string{
-	s = strings.TrimSuffix(s,"]")
-	s = strings.TrimPrefix(s,"[")
-	s = strings.ReplaceAll(s,"'","")
-	return strings.Split(s,",")
-}
-
-func createRecipeList(data []byte) []Recipe {
+func createRecipeList(data []byte) mapType {
 	var parsedJson mapType
 	
 
@@ -41,10 +32,14 @@ func createRecipeList(data []byte) []Recipe {
 		log.Fatal(err)
 	}
 
+	return parsedJson
 
 }
 
-func jsonReaderClosure(jsonPath string) func() []Recipe {
+
+
+// Export functions in capital letters
+func JsonReader(jsonPath string) func() mapType {
 	f, err := os.Open(jsonPath)
 	if err != nil {
 		log.Fatal(err)
@@ -58,12 +53,10 @@ func jsonReaderClosure(jsonPath string) func() []Recipe {
 		log.Fatal(err)
 	}
 	
-	
-
 	recipeData := createRecipeList(byteValue)
 
 
-	return func() []Recipe {
+	return func() mapType {
 		return recipeData
 	}
 }
