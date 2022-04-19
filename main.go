@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"os"
 	"recipe-recommender-backend/data"
@@ -84,10 +85,11 @@ func main() {
 
 	port := os.Getenv("PORT")
 
+
 	if port == ""  {
-		port = "8080"
+		log.Fatal("$PORT must be set")
 	}
 
 	// router.GET("/predict-recipe/:id",predictRecipe)
-	router.Run("localhost:"+port)
+	router.Run(":"+port)
 }
