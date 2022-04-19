@@ -27,7 +27,7 @@ func getAllRecommendations(c *gin.Context) {
 }
 
 func getRecommendation(c *gin.Context) {
-	getRecipeData := data.JsonReader("/Users/abhinav-m/Work/recipe-recommender-backend/recommendation_data.json")
+	getRecipeData := data.JsonReader("/app/recommendation_data.json")
 	recipeRecommendations := getRecipeData()
 	
 	id := c.Param("id")
@@ -41,7 +41,7 @@ func getRecommendation(c *gin.Context) {
 }
 
 func getRecipe(c *gin.Context) {
-	getRecipeData := data.JsonReader("/Users/abhinav-m/Work/recipe-recommender-backend/all_recipes.json")
+	getRecipeData := data.JsonReader("/app/all_recipes.json")
 	recipes := getRecipeData()
 
 	id := c.Param("id")
