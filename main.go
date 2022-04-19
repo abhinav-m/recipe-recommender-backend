@@ -14,13 +14,13 @@ gin.Context is the most important part of Gin.
  It carries request details, validates and serializes JSON, and more.
 */
 func getAllRecipes(c *gin.Context) {
-	getRecipeData := data.JsonReader("../all_recipes.json")
+	getRecipeData := data.JsonReader("/app/all_recipes.json")
 	recipes := getRecipeData()
 	c.IndentedJSON(http.StatusOK,recipes)
 }
 
 func getAllRecommendations(c *gin.Context) {
-	getRecipeData := data.JsonReader("../recommendation_data.json")
+	getRecipeData := data.JsonReader("/app/recommendation_data.json")
 	recipeRecommendations := getRecipeData()
 	c.IndentedJSON(http.StatusOK,recipeRecommendations)
 
