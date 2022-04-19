@@ -82,9 +82,9 @@ func main() {
 	router.GET("/recommendations",getAllRecommendations)
 	router.GET("/recommendation/:id",getRecommendation)
 
-	port, err := os.LookupEnv("PORT")
+	port := os.Getenv("PORT")
 
-	if err  {
+	if port == ""  {
 		port = "8080"
 	}
 
