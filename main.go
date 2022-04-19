@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"os"
 	"recipe-recommender-backend/data"
 
 	"github.com/gin-gonic/gin"
@@ -80,6 +81,13 @@ func main() {
 	router.GET("/recipe/:id",getRecipe)
 	router.GET("/recommendations",getAllRecommendations)
 	router.GET("/recommendation/:id",getRecommendation)
+
+	port, err := os.LookupEnv("PORT")
+
+	if err  {
+		port = "8080"
+	}
+
 	// router.GET("/predict-recipe/:id",predictRecipe)
-	router.Run("localhost:8080")
+	router.Run("localhost:"+port)
 }
