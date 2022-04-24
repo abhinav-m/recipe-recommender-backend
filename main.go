@@ -91,6 +91,25 @@ func CORSMiddleware() gin.HandlerFunc {
 
 
 
+func saveRecommendationRating(c *gin.Context){
+	var userRating data.USER_RATING
+	c.BindJSON(&userRating)
+	success := data.RecommendationRatingSaver("/app/user_rating_data.json",userRating)
+	if success {
+		c.JSON(200, gin.H{"status": "success"})
+		return
+	}
+	c.IndentedJSON(http.StatusNotFound,gin.H{"message":"Ratings not found"})
+}
+
+func getRatingsRecommendations(c *gin.Context){
+	getRecommendationRatings := data.JsonReader("/app/user_rating_data.json")
+	ratingsReommendations := getRecommendationRatings()
+	c.IndentedJSON(http.StatusOK,ratingsReommendations)
+	
+}
+
+
 func main() {
 	router := gin.Default()
 
@@ -102,6 +121,8 @@ func main() {
 	router.GET("/recommendation/:id",getRecommendation)
 	router.GET("/recommendations_tfidf",getTF_IDFRecommendations)
 	router.GET("/recommendations_tfidf/:id",getRecommendationTFIDF)
+	router.GET("/recommendations_ratings",getRatingsRecommendations)
+	router.POST("/rate_recommendation",saveRecommendationRating)
 
 
 	port := os.Getenv("PORT")

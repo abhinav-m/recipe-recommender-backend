@@ -60,3 +60,40 @@ func JsonReader(jsonPath string) func() mapType {
 		return recipeData
 	}
 }
+
+
+type USER_RATING struct {
+	USER string `json:"user" binding:"required"`
+	RECIPE_ID string  `json:"recipe_id" binding:"required"`
+	RATING string  `json:"rating_score" binding:"required"`
+}
+
+
+
+func RecommendationRatingSaver(ratingFilePath string, userRating USER_RATING ) bool {
+
+	f,err := os.OpenFile(ratingFilePath,os.O_APPEND|os.O_CREATE|os.O_RDWR,0644)
+
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	var existingRatings []USER_RATING
+
+	byteValue, _ := ioutil.ReadAll(f)
+
+	_ = json.Unmarshal(byteValue,&existingRatings)
+	
+	existingRatings  = append(existingRatings,userRating)
+
+	file, _ := json.MarshalIndent(existingRatings, "", " ")
+
+	_ = ioutil.WriteFile(ratingFilePath,file,0644)
+
+	return true
+
+
+
+}
