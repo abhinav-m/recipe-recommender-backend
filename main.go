@@ -55,6 +55,24 @@ func getRecipe(c *gin.Context) {
 	c.IndentedJSON(http.StatusNotFound,gin.H{"message":"Recipe not found"})
 }
 
+func getTF_IDFRecommendations(c *gin.Context) {
+	getRecipeData := data.JsonReader("/app/recommendation_data_tfidf.json")
+	recipeRecommendations := getRecipeData()
+	c.IndentedJSON(http.StatusOK,recipeRecommendations)
+}
+
+func getRecommendationTFIDF(c *gin.Context) {
+	getRecipeData := data.JsonReader("/app/recommendation_data_tfidf.json")
+	recipeRecommendations := getRecipeData()
+	id := c.Param("id")
+
+	if recipe,ok := recipeRecommendations[id]; ok {
+		c.IndentedJSON(http.StatusOK,recipe)
+		return 
+	}
+	c.IndentedJSON(http.StatusNotFound,gin.H{"message":"Recipe not found"})
+}
+
 func CORSMiddleware() gin.HandlerFunc {
     return func(c *gin.Context) {
         c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
@@ -82,12 +100,16 @@ func main() {
 	router.GET("/recipe/:id",getRecipe)
 	router.GET("/recommendations",getAllRecommendations)
 	router.GET("/recommendation/:id",getRecommendation)
+	router.GET("/recommendations_tfidf",getTF_IDFRecommendations)
+	router.GET("/recommendations_tfidf/:id",getRecommendationTFIDF)
+
 
 	port := os.Getenv("PORT")
 
 
 	if port == ""  {
 		log.Fatal("$PORT must be set")
+		// port = "8080"
 	}
 
 	// router.GET("/predict-recipe/:id",predictRecipe)
