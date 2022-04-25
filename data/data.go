@@ -61,12 +61,41 @@ func JsonReader(jsonPath string) func() mapType {
 	}
 }
 
-
 type USER_RATING struct {
 	USER string `json:"user" binding:"required"`
 	RECIPE_ID string  `json:"recipe_id" binding:"required"`
 	RATING string  `json:"rating_score" binding:"required"`
 }
+
+
+// Export functions in capital letters
+func JsonArrayReader(jsonPath string) func() []USER_RATING{
+	f, err := os.Open(jsonPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer f.Close()
+
+	byteValue, _ := ioutil.ReadAll(f)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	var existingRatings []USER_RATING
+
+
+	if err := json.Unmarshal(byteValue,&existingRatings);err !=nil{
+		log.Fatal(err)
+	}
+
+
+	return func() []USER_RATING {
+		return existingRatings
+	}
+}
+
 
 
 

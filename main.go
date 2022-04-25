@@ -103,7 +103,7 @@ func saveRecommendationRating(c *gin.Context){
 }
 
 func getRatingsRecommendations(c *gin.Context){
-	getRecommendationRatings := data.JsonReader("/app/user_rating_data.json")
+	getRecommendationRatings := data.JsonArrayReader("/app/user_rating_data.json")
 	ratingsReommendations := getRecommendationRatings()
 	c.IndentedJSON(http.StatusOK,ratingsReommendations)
 	
